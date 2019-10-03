@@ -29,19 +29,23 @@ public class AllFightResultCommand extends BotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
         List<FightResult> results = fightResultService.findAll();
-        final StringBuilder stringBuilder = new StringBuilder();
-        results.forEach(result -> {
-            stringBuilder.append(result.getOne().getName())
-                    .append(" ").append(result.getResultOne())
-                    .append(":")
-                    .append(result.getResultTwo()).append(" ")
-                    .append(result.getTwo().getName())
-                    .append("\n");
-        });
-
         SendMessage sendMessage = new SendMessage()
-                .setChatId(chat.getId())
-                .setText(stringBuilder.toString());
+                .setChatId(chat.getId());
+        if(results.size() > 0) {
+            final StringBuilder stringBuilder = new StringBuilder();
+            results.forEach(result -> {
+                stringBuilder.append(result.getOne().getName())
+                        .append(" ").append(result.getResultOne())
+                        .append(":")
+                        .append(result.getResultTwo()).append(" ")
+                        .append(result.getTwo().getName())
+                        .append("\n");
+            });
+            sendMessage.setText(stringBuilder.toString());
+        } else {
+            sendMessage.setText("Пока пусто");
+        }
+
         try {
             absSender.execute(sendMessage);
         } catch (TelegramApiException e) {

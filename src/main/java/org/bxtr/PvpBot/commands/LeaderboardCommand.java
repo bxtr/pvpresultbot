@@ -69,7 +69,7 @@ public class LeaderboardCommand extends BotCommand {
                 });
 
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId())
-                .setText(stringBuilder.toString());
+                .setText(stringBuilder.toString().length() > 0 ? stringBuilder.toString() : "Пока пусто");
         try {
             absSender.execute(sendMessage);
         } catch (TelegramApiException e) {

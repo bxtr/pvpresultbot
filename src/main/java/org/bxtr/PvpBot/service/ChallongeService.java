@@ -36,7 +36,7 @@ public class ChallongeService {
         List<FightResult> fightResults = fightResultService.findAll();
         try {
             Tournament tournament = challonge.getTournaments().stream()
-                    .filter(item -> item.getName().equals("Бот-тест"))
+                    .filter(item -> item.getName().equals("Sinister cup"))
                     .findFirst().orElse(null);
 
             List<Match> matches = challonge.getMatches(tournament);
