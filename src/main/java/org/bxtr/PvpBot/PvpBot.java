@@ -35,6 +35,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private LeaderboardCommand leaderboardCommand;
     @Autowired
     private UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand;
+    @Autowired
+    private FriendCodeListCommand friendCodeListCommand;
 
     @Value("${pvpbot.telegram.token}")
     private String TOKEN;
@@ -65,6 +67,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             register(helpCommand);
             register(leaderboardCommand);
             register(updateResultsOnChallongeCommand);
+            register(friendCodeListCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
