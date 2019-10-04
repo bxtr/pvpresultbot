@@ -42,7 +42,8 @@ public class FriendCodeListCommand extends BotCommand {
                         .append(player.getTownName())
                         .append("\n\n");
             });
-            sendMessage.setText(stringBuilder.toString());
+            sendMessage.setText(characterEscaping(stringBuilder.toString()));
+            sendMessage.enableMarkdown(true);
         } else {
             sendMessage.setText("Пока пусто");
         }
@@ -52,5 +53,10 @@ public class FriendCodeListCommand extends BotCommand {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private String characterEscaping(String str) {
+        return str.replaceAll("_", "\\\\_");
     }
 }
