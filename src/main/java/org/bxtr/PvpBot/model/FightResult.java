@@ -25,6 +25,9 @@ public class FightResult {
     @Column(name = "RESULT_TWO")
     private Integer resultTwo;
 
+    @Column(name = "REGISTERED")
+    private Boolean registered;
+
     public FightResult() {
         //empty
     }
@@ -80,6 +83,15 @@ public class FightResult {
 
     public FightResult setResultTwo(Integer resultTwo) {
         this.resultTwo = resultTwo;
+        return this;
+    }
+
+    public Boolean getRegistered() {
+        return registered;
+    }
+
+    public FightResult setRegistered(Boolean registered) {
+        this.registered = registered;
         return this;
     }
 }

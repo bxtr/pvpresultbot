@@ -33,7 +33,12 @@ public class ChallongeService {
     public void update() {
         Credentials credentials = new Credentials(userName, token);
         Challonge challonge = new Challonge(credentials, new GsonSerializer(), new RetrofitRestClient());
-        List<FightResult> fightResults = fightResultService.findAll();
+        List<FightResult> unregistredFightResults = fightResultService.findAll().stream()
+                .filter(item -> item.getRegistered() == null || !item.getRegistered())
+                .collect(Collectors.toList());
+        if(unregistredFightResults.size() == 0)
+            return;
+
         try {
             Tournament tournament = challonge.getTournaments().stream()
                     .filter(item -> item.getName().equals("Sinister cup"))
@@ -43,7 +48,7 @@ public class ChallongeService {
             Map<String, Long> mapPlayerNameToPlayerId = challonge.getParticipants(tournament).stream()
                     .collect(Collectors.toMap(item -> item.getName(), item -> item.getId()));
 
-            for (FightResult fightResult : fightResults) {
+            for (FightResult fightResult : unregistredFightResults) {
                 Long playerOneId = mapPlayerNameToPlayerId.get(fightResult.getOne().getName());
                 Long playerTwoId = mapPlayerNameToPlayerId.get(fightResult.getTwo().getName());
                 Match chosenMatch = matches.stream().filter(match -> match.getPlayer1Id().equals(playerOneId) && match.getPlayer2Id().equals(playerTwoId)
@@ -58,6 +63,8 @@ public class ChallongeService {
                         matchQuery = getMatchQuery(chosenMatch, fightResult.getResultTwo(), fightResult.getResultOne());
                     }
                     challonge.updateMatch(chosenMatch, matchQuery);
+                    fightResult.setRegistered(true);
+                    fightResultService.saveResult(fightResult);
                 }
             }
 

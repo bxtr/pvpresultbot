@@ -15,4 +15,5 @@ CREATE TABLE fight_result (
     two integer,
     result_one integer,
     result_two integer
+    registered boolean
 );

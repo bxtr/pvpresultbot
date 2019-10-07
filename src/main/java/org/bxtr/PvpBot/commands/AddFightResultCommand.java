@@ -41,7 +41,8 @@ public class AddFightResultCommand extends BotCommand {
                     .setOne(playerService.findPlayer(arguments[0]))
                     .setTwo(playerService.findPlayer(arguments[1]))
                     .setResultOne(Integer.parseInt(arguments[2]))
-                    .setResultTwo(Integer.parseInt(arguments[3]));
+                    .setResultTwo(Integer.parseInt(arguments[3]))
+                    .setRegistered(false);
 
             fightResultService.saveResult(fightResult);
             sendMessage.setText("Результат добавлен");
