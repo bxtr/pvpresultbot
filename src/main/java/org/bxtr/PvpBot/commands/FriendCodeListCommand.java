@@ -1,5 +1,6 @@
 package org.bxtr.PvpBot.commands;
 
+import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,13 @@ public class FriendCodeListCommand extends BotCommand {
         if(all.size() > 0) {
             final StringBuilder stringBuilder = new StringBuilder();
             all.forEach(player -> {
-                stringBuilder.append(player.getName())
+                stringBuilder.append(Utils.safeToString(player.getName()))
                         .append(" `")
-                        .append(player.getFriendCode())
+                        .append(Utils.safeToString(player.getFriendCode()))
                         .append("` \n")
-                        .append(player.getInGameNickName())
+                        .append(Utils.safeToString(player.getInGameNickName()))
                         .append(" ")
-                        .append(player.getTownName())
+                        .append(Utils.safeToString(player.getTownName()))
                         .append("\n\n");
             });
             sendMessage.setText(characterEscaping(stringBuilder.toString()));
