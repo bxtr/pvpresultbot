@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 @Scope("singleton")
 public class AllFightResultCommand extends BotCommand {
-    public final static String DESCRIPTION = "все результаты сражений";
+    public final static String DESCRIPTION = "результаты всех сражений";
 
     @Autowired
     private FightResultService fightResultService;
