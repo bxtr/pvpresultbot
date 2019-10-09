@@ -76,6 +76,8 @@ public class AddFightResultCommand extends BotCommand {
                     errors.add("Первый игрок не найден. Возможно, не правильно написан ник или он не зарегестрирован");
                 if (!checkPlayer(player2.toLowerCase()))
                     errors.add("Второй игрок не найден. Возможно, не правильно написан ник или он не зарегестрирован");
+                if(player1.equals(player2))
+                    errors.add("Нельзя добавить результаты сражений между одним и тем же человеком");
                 if (!checkScore(scorePlayer1))
                     errors.add("Счет для первого игрока неправильно указан, допустимо указывать значение от 0 до 3");
                 if (!checkScore(scorePlayer2))
