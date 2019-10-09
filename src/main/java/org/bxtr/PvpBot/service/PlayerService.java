@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,5 +32,11 @@ public class PlayerService {
         playerCrudRepository.findAll()
                 .forEach(item -> players.add(item));
         return players;
+    }
+
+    public List<Player> findLike(String name) {
+        if (name != null)
+            return playerCrudRepository.findByNameContaining(name);
+        return Collections.emptyList();
     }
 }

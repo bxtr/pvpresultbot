@@ -1,6 +1,8 @@
 package org.bxtr.PvpBot;
 
 import org.bxtr.PvpBot.commands.*;
+import org.bxtr.PvpBot.model.Player;
+import org.bxtr.PvpBot.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -8,12 +10,20 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResult;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @Scope("singleton")
@@ -37,9 +47,17 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand;
     @Autowired
     private FriendCodeListCommand friendCodeListCommand;
+    @Autowired
+    private AddFightResultShortCommand addFightResultShortCommand;
+
+    @Autowired
+    private PlayerService playerService;
+
+    private static final Integer CACHETIME = 86400;
 
     @Value("${pvpbot.telegram.token}")
     private String TOKEN;
+
 
     public PvpBot(@Autowired DefaultBotOptions options) {
         super(options, "PvpResultBot");
@@ -68,6 +86,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             register(leaderboardCommand);
             register(updateResultsOnChallongeCommand);
             register(friendCodeListCommand);
+            register(addFightResultShortCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
@@ -80,10 +99,12 @@ public class PvpBot extends TelegramLongPollingCommandBot {
 
     @Override
     public void processNonCommandUpdate(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasInlineQuery()) {
+            handleIncomingInlineQuery(update.getInlineQuery());
+        } else if (update.hasMessage() && update.getMessage().hasText()) {
             String message = update.getMessage().getText();
             System.out.println(message);
-            SendMessage sendMessage = new SendMessage(update.getMessage().getChatId(), message + "1");
+            SendMessage sendMessage = new SendMessage(update.getMessage().getChatId(), message);
             try {
                 execute(sendMessage);
             } catch (TelegramApiException e) {
@@ -92,4 +113,49 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         }
     }
 
+    private void handleIncomingInlineQuery(InlineQuery inlineQuery) {
+        String query = inlineQuery.getQuery();
+        System.out.printf("Searching: %s \n", query);
+        try {
+            if (!query.isEmpty()) {
+                List<Player> results = playerService.findLike(query);
+                execute(converteResultsToResponse(inlineQuery, results));
+            } else {
+                execute(converteResultsToResponse(inlineQuery, new ArrayList<>()));
+            }
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static AnswerInlineQuery converteResultsToResponse(InlineQuery inlineQuery, List<Player> results) {
+        AnswerInlineQuery answerInlineQuery = new AnswerInlineQuery();
+        answerInlineQuery.setInlineQueryId(inlineQuery.getId());
+        answerInlineQuery.setCacheTime(CACHETIME);
+        answerInlineQuery.setResults(convertRaeResults(results));
+        return answerInlineQuery;
+    }
+
+
+    private static List<InlineQueryResult> convertRaeResults(List<Player> raeResults) {
+        List<InlineQueryResult> results = new ArrayList<>();
+        for (int i = 0; i < raeResults.size(); i++) {
+            for (String score : Arrays.asList("2 1", "1 2", "2 0", "0 2")) {
+                Player player = raeResults.get(i);
+                InputTextMessageContent messageContent = new InputTextMessageContent();
+                messageContent.disableWebPagePreview();
+                messageContent.enableMarkdown(true);
+                messageContent.setMessageText("/short " + player.getName() + " " + score);
+                InlineQueryResultArticle article = new InlineQueryResultArticle();
+                article.setInputMessageContent(messageContent);
+                article.setId(Integer.toString(i) + "#" + score);
+                article.setTitle(player.getName());
+                article.setDescription(score);
+                results.add(article);
+            }
+        }
+
+        return results;
+    }
 }
