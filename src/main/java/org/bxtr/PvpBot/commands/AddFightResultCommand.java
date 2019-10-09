@@ -1,6 +1,7 @@
 package org.bxtr.PvpBot.commands;
 
 import org.bxtr.PvpBot.model.FightResult;
+import org.bxtr.PvpBot.repository.FightResultRepositoryJPA;
 import org.bxtr.PvpBot.service.FightResultService;
 import org.bxtr.PvpBot.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class AddFightResultCommand extends BotCommand {
 
     @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    private FightResultRepositoryJPA fightResultRepositoryJPA;
 
     @Autowired
     private FightResultService fightResultService;
@@ -83,6 +87,10 @@ public class AddFightResultCommand extends BotCommand {
                 if (scorePlayer1 == scorePlayer2)
                     errors.add("у игроков должно быть различное количество выигранных раундов");
 
+                List<FightResult> fightResultWith = fightResultRepositoryJPA.findFightResultWith(player1, player2);
+                if (fightResultWith.size() > 0) {
+                    errors.add("Для этих игроков результат уже был добавлен ранее");
+                }
             } catch (Exception e) {
                 errors.add("Неверный формат переменных, возможно, ник и счет стоят не на своих местах");
             }
