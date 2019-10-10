@@ -1,5 +1,7 @@
 package org.bxtr.PvpBot.commands;
 
+import lombok.extern.log4j.Log4j2;
+import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.repository.FightResultRepositoryJPA;
 import org.bxtr.PvpBot.service.FightResultService;
@@ -17,6 +19,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Component
 @Scope("singleton")
 public class AddFightResultCommand extends BotCommand {
@@ -38,6 +41,7 @@ public class AddFightResultCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+        log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), arguments));
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
         List<String> errrors = validateInput(arguments);
         if (errrors.size() == 0) {

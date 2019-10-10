@@ -1,5 +1,7 @@
 package org.bxtr.PvpBot.commands;
 
+import lombok.extern.log4j.Log4j2;
+import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.service.FightResultService;
@@ -17,6 +19,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Component
 @Scope("singleton")
 public class LeaderboardCommand extends BotCommand {
@@ -34,6 +37,7 @@ public class LeaderboardCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+        log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), strings));
         List<FightResult> all = fightResultService.findAll();
 
         final Map<Long, Integer> mapPlayerIdToScore = new LinkedHashMap<>();

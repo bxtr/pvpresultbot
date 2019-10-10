@@ -1,5 +1,6 @@
 package org.bxtr.PvpBot;
 
+import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.commands.*;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.service.PlayerService;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 @Component
 @Scope("singleton")
 public class PvpBot extends TelegramLongPollingCommandBot {
@@ -115,7 +117,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
 
     private void handleIncomingInlineQuery(InlineQuery inlineQuery) {
         String query = inlineQuery.getQuery();
-        System.out.printf("Searching: %s \n", query);
+        log.info(String.format("Searching: %s \n", query));
         try {
             if (!query.isEmpty()) {
                 List<Player> results = playerService.findLike(query);

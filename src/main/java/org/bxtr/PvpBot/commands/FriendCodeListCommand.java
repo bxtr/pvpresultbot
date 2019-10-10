@@ -1,5 +1,6 @@
 package org.bxtr.PvpBot.commands;
 
+import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.service.PlayerService;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
+@Log4j2
 @Component
 @Scope("singleton")
 public class FriendCodeListCommand extends BotCommand {
@@ -28,6 +30,7 @@ public class FriendCodeListCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+        log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), strings));
         List<Player> all = playerService.findAll();
         all.sort((one, two) -> one.getName().compareToIgnoreCase(two.getName()));
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
