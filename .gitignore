@@ -5,6 +5,7 @@ target/
 !**/src/test/**
 application.properties
 players.sql
+tournaments.sql
 
 ### STS ###
 .apt_generated

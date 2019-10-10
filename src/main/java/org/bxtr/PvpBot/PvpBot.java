@@ -51,6 +51,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private FriendCodeListCommand friendCodeListCommand;
     @Autowired
     private AddFightResultShortCommand addFightResultShortCommand;
+    @Autowired
+    private DoesNotPlayWithCommand doesNotPlayWithCommand;
 
     @Autowired
     private PlayerService playerService;
@@ -89,6 +91,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             register(updateResultsOnChallongeCommand);
             register(friendCodeListCommand);
             register(addFightResultShortCommand);
+            register(doesNotPlayWithCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }

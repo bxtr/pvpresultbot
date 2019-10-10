@@ -17,3 +17,15 @@ CREATE TABLE fight_result (
     result_two integer
     registered boolean
 );
+
+CREATE TABLE tournament (
+    id serial PRIMARY KEY,
+    tournament_name VARCHAR(200),
+    url VARCHAR(200)
+);
+
+CREATE TABLE tournament_participant (
+    id serial PRIMARY KEY,
+    player_id integer,
+    tournament_id integer
+);
