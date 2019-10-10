@@ -17,7 +17,6 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -38,39 +37,30 @@ public class LeaderboardCommand extends BotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), strings));
+
         List<FightResult> all = fightResultService.findAll();
-
-        final Map<Long, Integer> mapPlayerIdToScore = new LinkedHashMap<>();
-        all.stream()
-                .map(fight -> fight.getWinner())
-                .forEach(player -> {
-                    if (!mapPlayerIdToScore.containsKey(player.getId()))
-                        mapPlayerIdToScore.put(player.getId(), 0);
-                    mapPlayerIdToScore.put(player.getId(), mapPlayerIdToScore.get(player.getId()) + 1);
-                });
-
-        final Map<Long, Player> playerMap = playerService.findAll().stream()
-                .collect(Collectors.toMap(player -> player.getId(), player -> player));
-
-        List<HolderWinner> holderWinners = new ArrayList<>();
-        for(Long playerId : mapPlayerIdToScore.keySet()) {
-            HolderWinner holderWinner = new HolderWinner()
-                    .setWinner(playerMap.get(playerId))
-                    .setScore(mapPlayerIdToScore.get(playerId));
-            holderWinners.add(holderWinner);
+        Map<Player, Integer> map = new HashMap<>();
+        for (FightResult fightResult : all) {
+            if (!map.containsKey(fightResult.getWinner()))
+                map.put(fightResult.getWinner(), 0);
+            map.put(fightResult.getWinner(), map.get(fightResult.getWinner()) + 1);
         }
 
-        Collections.sort(holderWinners, (item1, item2) -> item1.getScore().compareTo(item2.getScore()));
+        Map<Integer, List<Player>> resultMap = new TreeMap<>(Comparator.reverseOrder());
+        for (Map.Entry<Player, Integer> entry : map.entrySet()) {
+            if (!resultMap.containsKey(entry.getValue()))
+                resultMap.put(entry.getValue(), new ArrayList<>());
+            resultMap.get(entry.getValue()).add(entry.getKey());
+        }
 
         final StringBuilder stringBuilder = new StringBuilder();
-
-        holderWinners
-                .forEach(entry -> {
-                    Player player = entry.getWinner();
-                    stringBuilder.append(player.getName())
-                            .append(" - ").append(entry.getScore())
-                            .append("\n");
-                });
+        int place = 1;
+        for (Map.Entry<Integer, List<Player>> entry : resultMap.entrySet()) {
+            stringBuilder.append("#").append(place).append(" ");
+            place++;
+            entry.getValue().forEach(player -> stringBuilder.append(player.getName()).append(" "));
+            stringBuilder.append("- ").append(Integer.toString(entry.getKey())).append("\n");
+        }
 
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId())
                 .setText(stringBuilder.toString().length() > 0 ? stringBuilder.toString() : "Пока пусто");
@@ -78,35 +68,6 @@ public class LeaderboardCommand extends BotCommand {
             absSender.execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
-        }
-    }
-
-
-    class HolderWinner {
-
-        private HolderWinner(){
-            //empty
-        }
-
-        Player winner;
-        Integer score;
-
-        public Player getWinner() {
-            return winner;
-        }
-
-        public HolderWinner setWinner(Player winner) {
-            this.winner = winner;
-            return this;
-        }
-
-        public Integer getScore() {
-            return score;
-        }
-
-        public HolderWinner setScore(Integer score) {
-            this.score = score;
-            return this;
         }
     }
 }

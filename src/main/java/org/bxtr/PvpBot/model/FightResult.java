@@ -1,7 +1,10 @@
 package org.bxtr.PvpBot.model;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
+@EqualsAndHashCode
 @Entity
 @Table(name = "FIGHT_RESULT")
 public class FightResult {
@@ -13,11 +16,11 @@ public class FightResult {
 
     @ManyToOne
     @JoinColumn(name = "ONE", referencedColumnName = "ID")
-    private Player one;
+    @EqualsAndHashCode.Exclude private Player one;
 
     @ManyToOne
     @JoinColumn(name = "TWO", referencedColumnName = "ID")
-    private Player two;
+    @EqualsAndHashCode.Exclude private Player two;
 
     @Column(name = "RESULT_ONE")
     private Integer resultOne;

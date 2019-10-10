@@ -1,10 +1,13 @@
 package org.bxtr.PvpBot.model;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
 /**
  * Модель для игрока.
  */
+@EqualsAndHashCode
 @Entity
 @Table(name = "PLAYER")
 public class Player {
