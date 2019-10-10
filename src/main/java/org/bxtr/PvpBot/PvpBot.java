@@ -105,7 +105,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             handleIncomingInlineQuery(update.getInlineQuery());
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             String message = update.getMessage().getText();
-            System.out.println(message);
+            log.info("text message:" + Utils.safeToString(message));
             SendMessage sendMessage = new SendMessage(update.getMessage().getChatId(), message);
             try {
                 execute(sendMessage);
@@ -117,7 +117,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
 
     private void handleIncomingInlineQuery(InlineQuery inlineQuery) {
         String query = inlineQuery.getQuery();
-        log.info(String.format("Searching: %s \n", query));
+        log.info(String.format("Searching: %s", query));
         try {
             if (!query.isEmpty()) {
                 List<Player> results = playerService.findLike(query);
