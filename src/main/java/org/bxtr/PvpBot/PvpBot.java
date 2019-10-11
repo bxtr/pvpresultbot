@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -70,11 +71,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             SendMessage commandUnknownMessage = new SendMessage();
             commandUnknownMessage.setChatId(message.getChatId());
             commandUnknownMessage.setText("The command '" + message.getText() + "' is not known by this bot.");
-            try {
-                execute(commandUnknownMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            Utils.send(absSender, commandUnknownMessage);
         });
     }
 
@@ -82,19 +79,24 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private void postConstruct() {
         try {
             telegramBotsApi.registerBot(this);
-            register(addPlayerCommand);
-            register(addFightResultCommand);
-            register(allPlayersCommand);
-            register(allFightResultCommand);
-            register(helpCommand);
-            register(leaderboardCommand);
-            register(updateResultsOnChallongeCommand);
-            register(friendCodeListCommand);
-            register(addFightResultShortCommand);
-            register(doesNotPlayWithCommand);
+            registerLog(addPlayerCommand);
+            registerLog(addFightResultCommand);
+            registerLog(allPlayersCommand);
+            registerLog(allFightResultCommand);
+            registerLog(helpCommand);
+            registerLog(leaderboardCommand);
+            registerLog(updateResultsOnChallongeCommand);
+            registerLog(friendCodeListCommand);
+            registerLog(addFightResultShortCommand);
+            registerLog(doesNotPlayWithCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    private void registerLog(BotCommand botCommand){
+        log.info(String.format("/%s - %s", botCommand.getCommandIdentifier(), botCommand.getDescription()));
+        register(botCommand);
     }
 
     @Override

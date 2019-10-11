@@ -26,7 +26,7 @@ public class AddFightResultShortCommand extends BotCommand {
     private AddFightResultCommand addFightResultCommand;
 
     public AddFightResultShortCommand() {
-        super("short", "Добавления результатов бой, без указания первого игрока");
+        super("short", "Добавления результатов бой, без указания первого игрока.");
     }
 
 
@@ -46,11 +46,8 @@ public class AddFightResultShortCommand extends BotCommand {
             SendMessage sendMessage = new SendMessage()
                     .setChatId(chat.getId())
                     .setText("Вы не зарегистрированы в боте.");
-            try {
-                absSender.execute(sendMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+
+            Utils.send(absSender, sendMessage);
         }
     }
 }

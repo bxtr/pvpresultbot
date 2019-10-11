@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerCrudRepository extends CrudRepository<Player, Long> {
-    Optional<Player> findByName(String name);
+    Optional<Player> findByNameIgnoreCase(String name);
 
     List<Player> findByNameContaining(String name);
 }

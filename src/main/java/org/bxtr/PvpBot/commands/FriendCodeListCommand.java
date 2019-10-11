@@ -25,7 +25,7 @@ public class FriendCodeListCommand extends BotCommand {
     private PlayerService playerService;
 
     public FriendCodeListCommand() {
-        super("friends", "Список друзей.");
+        super("friends", "Не обновленный список друзей.");
     }
 
     @Override
@@ -52,11 +52,7 @@ public class FriendCodeListCommand extends BotCommand {
             sendMessage.setText("Пока пусто");
         }
 
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 
 

@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 @Scope("singleton")
 public class AllPlayersCommand extends BotCommand {
-    public final static String DESCRIPTION = "все зарегистрированные игроки";
+    public final static String DESCRIPTION = "Все зарегистрированные игроки.";
 
     @Autowired
     private PlayerService playerService;
@@ -45,10 +45,6 @@ public class AllPlayersCommand extends BotCommand {
             sendMessage.setText("Пока пусто");
         }
 
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 }

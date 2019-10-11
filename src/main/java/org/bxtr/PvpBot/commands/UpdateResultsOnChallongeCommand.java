@@ -22,7 +22,7 @@ public class UpdateResultsOnChallongeCommand extends BotCommand {
     private ChallongeService challongeService;
 
     public UpdateResultsOnChallongeCommand() {
-        super("update", "обновит результаты на Challonge");
+        super("update", "Обновит результаты на Challonge.");
     }
 
     @Override

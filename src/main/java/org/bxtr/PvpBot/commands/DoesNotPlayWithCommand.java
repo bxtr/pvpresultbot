@@ -38,15 +38,19 @@ public class DoesNotPlayWithCommand extends BotCommand {
     private FightResultRepositoryJPA fightResultRepositoryJPA;
 
     public DoesNotPlayWithCommand() {
-        super("/not", "Покажет всех игроков, с которыми еще не играли в этот турнир");
+        super("/not", "Покажет всех игроков, с которыми еще не играли в этот турнир.");
     }
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         log.info(Utils.commandInputToString(user, chat, this.getCommandIdentifier(), strings));
         Player player = playerService.findPlayer("@" + Utils.safeToString(user.getUserName()));
-        if(player == null)
-            return;
+        SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
+        if(player == null) {
+            log.warn(String.format("Пользователь с ником %s не найдено", Utils.safeToString(user.getUserName())));
+            Utils.send(absSender, sendMessage.setText(String.format("Игрок с ником @%s не найден",
+                    Utils.safeToString(user.getUserName()))));
+        }
 
         List<TournamentParticipant> tournamentParticipant = tournamentParticipantService.getAll();
         Set<Player> allOtherPlayersInTournament = tournamentParticipant.stream().map(item -> item.getPlayer())
@@ -61,7 +65,6 @@ public class DoesNotPlayWithCommand extends BotCommand {
 
         allOtherPlayersInTournament.removeAll(playersAlreadyPlayed);
 
-        SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
         if(allOtherPlayersInTournament.size() > 0) {
             final StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Осталось сыграть с:\n");
@@ -72,10 +75,6 @@ public class DoesNotPlayWithCommand extends BotCommand {
             sendMessage.setText("Сыграно со всеми участниками");
         }
 
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 }

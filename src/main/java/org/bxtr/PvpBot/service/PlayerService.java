@@ -24,7 +24,7 @@ public class PlayerService {
     }
 
     public Player findPlayer(String name) {
-        return playerCrudRepository.findByName(name.toLowerCase()).orElse(null);
+        return playerCrudRepository.findByNameIgnoreCase(name).orElse(null);
     }
 
     public List<Player> findAll() {
@@ -36,7 +36,7 @@ public class PlayerService {
 
     public List<Player> findLike(String name) {
         if (name != null)
-            return playerCrudRepository.findByNameContaining(name);
+            return playerCrudRepository.findByNameContaining(name.toLowerCase());
         return Collections.emptyList();
     }
 }

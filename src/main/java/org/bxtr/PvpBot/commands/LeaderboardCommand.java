@@ -22,7 +22,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 public class LeaderboardCommand extends BotCommand {
-    public final static String DESCRIPTION = "лидербоард";
+    public final static String DESCRIPTION = "Лидербоард.";
 
     @Autowired
     private FightResultService fightResultService;
@@ -64,10 +64,6 @@ public class LeaderboardCommand extends BotCommand {
 
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId())
                 .setText(stringBuilder.toString().length() > 0 ? stringBuilder.toString() : "Пока пусто");
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 }

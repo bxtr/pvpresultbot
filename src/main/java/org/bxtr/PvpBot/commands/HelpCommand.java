@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class HelpCommand extends BotCommand {
 
     public HelpCommand() {
-        super("help", "все команды");
+        super("help", "Описание некоторых команд.");
     }
 
     @Override
@@ -32,10 +32,7 @@ public class HelpCommand extends BotCommand {
 
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId())
                 .setText(stringBuilder.toString());
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+
+        Utils.send(absSender, sendMessage);
     }
 }

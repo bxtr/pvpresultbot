@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 @Scope("singleton")
 public class AllFightResultCommand extends BotCommand {
-    public final static String DESCRIPTION = "результаты всех сражений";
+    public final static String DESCRIPTION = "Результаты сражений. Без указания игрока - все, с игроком - по фильтру.";
 
     @Autowired
     private FightResultService fightResultService;
@@ -86,11 +86,7 @@ public class AllFightResultCommand extends BotCommand {
             }
         }
 
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 
 }

@@ -23,8 +23,7 @@ import java.util.List;
 @Component
 @Scope("singleton")
 public class AddFightResultCommand extends BotCommand {
-    public final static String DESCRIPTION = "добавить результат сражения. Для этого надо, чтобы оба игрока были зарегистрированны. " +
-            "\n Пример: /add @bxtr21 @pvpoke 1 2";
+    public final static String DESCRIPTION = "Добавить результат сражения. Для этого надо, чтобы оба игрока были зарегистрированны. Пример: /add @bxtr21 @pvpoke 1 2";
 
     @Autowired
     private PlayerService playerService;
@@ -60,11 +59,7 @@ public class AddFightResultCommand extends BotCommand {
             sendMessage.setText(stringBuilder.toString());
         }
 
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 
 

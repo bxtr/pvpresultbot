@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 @Scope("singleton")
 public class AddPlayerCommand extends BotCommand {
-    public final static String DESCRIPTION = "добавить нового игрока. добавлять через ник в телеге. Пример: /new @bxtr21";
+    public final static String DESCRIPTION = "Добавить нового игрока. Добавлять через ник в телеге. Пример: /new @bxtr21";
 
     @Autowired
     private PlayerService playerService;
@@ -51,10 +51,6 @@ public class AddPlayerCommand extends BotCommand {
             sendMessage.setText("Incorrect input");
         }
 
-        try {
-            absSender.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        Utils.send(absSender, sendMessage);
     }
 }
