@@ -29,3 +29,10 @@ CREATE TABLE tournament_participant (
     player_id integer,
     tournament_id integer
 );
+
+CREATE TABLE team (
+    id serial PRIMARY KEY,
+    player_id integer,
+    tournament_id integer,
+    image bytea
+);

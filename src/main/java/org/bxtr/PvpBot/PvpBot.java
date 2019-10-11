@@ -3,7 +3,10 @@ package org.bxtr.PvpBot;
 import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.commands.*;
 import org.bxtr.PvpBot.model.Player;
+import org.bxtr.PvpBot.model.Team;
 import org.bxtr.PvpBot.service.PlayerService;
+import org.bxtr.PvpBot.service.TeamService;
+import org.bxtr.PvpBot.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -13,7 +16,10 @@ import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingC
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.File;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
@@ -23,9 +29,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
 
 @Log4j2
 @Component
@@ -57,6 +63,10 @@ public class PvpBot extends TelegramLongPollingCommandBot {
 
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private TeamService teamService;
+    @Autowired
+    private TournamentService tournamentService;
 
     private static final Integer CACHETIME = 86400;
 
@@ -94,7 +104,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         }
     }
 
-    private void registerLog(BotCommand botCommand){
+    private void registerLog(BotCommand botCommand) {
         log.info(String.format("/%s - %s", botCommand.getCommandIdentifier(), botCommand.getDescription()));
         register(botCommand);
     }
@@ -108,6 +118,38 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     public void processNonCommandUpdate(Update update) {
         if (update.hasInlineQuery()) {
             handleIncomingInlineQuery(update.getInlineQuery());
+        } else if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            String userName = update.getMessage().getFrom().getUserName();
+            log.info(String.format("@%s загружает команду", userName));
+            Player player = playerService.findPlayer("@" + userName);
+            if (player != null) {
+                PhotoSize photo = getPhoto(update);
+                String filePath = getFilePath(photo);
+                java.io.File file = downloadPhotoByFilePath(filePath);
+                Team team = new Team();
+                team.setPlayer(player);
+                team.setTournament(tournamentService.getTournament());
+                try {
+                    byte[] fileContent = Files.readAllBytes(file.toPath());
+                    team.setImage(fileContent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    SendMessage sendMessage = new SendMessage(update.getMessage().getChatId(),
+                            "Произошла ошибка во время сохранения команды.");
+                    try {
+                        execute(sendMessage);
+                    } catch (TelegramApiException e1) {
+                        e1.printStackTrace();
+                    }
+                    return;
+                }
+                teamService.save(team);
+                try {
+                    execute(new SendMessage(update.getMessage().getChatId(), "Команда загружена"));
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
         } else if (update.hasMessage() && update.getMessage().hasText()) {
             String message = update.getMessage().getText();
             log.info("text message:" + Utils.safeToString(message));
@@ -164,5 +206,40 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         }
 
         return results;
+    }
+
+    private PhotoSize getPhoto(Update update) {
+        List<PhotoSize> photos = update.getMessage().getPhoto();
+        return photos.stream()
+                .max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
+    }
+
+    public String getFilePath(PhotoSize photo) {
+        Objects.requireNonNull(photo);
+
+        if (photo.hasFilePath()) {
+            return photo.getFilePath();
+        } else {
+            GetFile getFileMethod = new GetFile();
+            getFileMethod.setFileId(photo.getFileId());
+            try {
+                File file = execute(getFileMethod);
+                return file.getFilePath();
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    public java.io.File downloadPhotoByFilePath(String filePath) {
+        try {
+            return downloadFile(filePath);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
