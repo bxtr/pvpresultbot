@@ -3,7 +3,6 @@ package org.bxtr.PvpBot.commands;
 import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.service.ChallongeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;

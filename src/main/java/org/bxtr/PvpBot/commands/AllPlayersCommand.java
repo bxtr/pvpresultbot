@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.service.PlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
@@ -12,7 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 

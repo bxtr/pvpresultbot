@@ -6,10 +6,8 @@ import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.model.TournamentParticipant;
 import org.bxtr.PvpBot.repository.FightResultRepositoryJPA;
-import org.bxtr.PvpBot.repository.TournamentParticipantRepository;
 import org.bxtr.PvpBot.service.PlayerService;
 import org.bxtr.PvpBot.service.TournamentParticipantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
@@ -17,7 +15,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 import java.util.Set;
@@ -46,7 +43,7 @@ public class DoesNotPlayWithCommand extends BotCommand {
         log.info(Utils.commandInputToString(user, chat, this.getCommandIdentifier(), strings));
         Player player = playerService.findPlayer("@" + Utils.safeToString(user.getUserName()));
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
-        if(player == null) {
+        if (player == null) {
             log.warn(String.format("Пользователь с ником %s не найдено", Utils.safeToString(user.getUserName())));
             Utils.send(absSender, sendMessage.setText(String.format("Игрок с ником @%s не найден",
                     Utils.safeToString(user.getUserName()))));
@@ -65,7 +62,7 @@ public class DoesNotPlayWithCommand extends BotCommand {
 
         allOtherPlayersInTournament.removeAll(playersAlreadyPlayed);
 
-        if(allOtherPlayersInTournament.size() > 0) {
+        if (allOtherPlayersInTournament.size() > 0) {
             final StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Осталось сыграть с:\n");
             allOtherPlayersInTournament.forEach(otherPlayer ->

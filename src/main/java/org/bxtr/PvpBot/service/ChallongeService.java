@@ -9,7 +9,6 @@ import at.stefangeyer.challonge.model.query.MatchQuery;
 import at.stefangeyer.challonge.rest.retrofit.RetrofitRestClient;
 import at.stefangeyer.challonge.serializer.gson.GsonSerializer;
 import org.bxtr.PvpBot.model.FightResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class ChallongeService {
     @Value("${pvpbot.challonge.token}")
     private String token;
 
-    @Value("{pvpBot.challonge.curentTournament}")
+    @Value("${pvpBot.challonge.curentTournament}")
     private String currentTournament;
 
     public ChallongeService(FightResultService fightResultService) {
@@ -43,7 +42,7 @@ public class ChallongeService {
         List<FightResult> unregistredFightResults = fightResultService.findAll().stream()
                 .filter(item -> item.getRegistered() == null || !item.getRegistered())
                 .collect(Collectors.toList());
-        if(unregistredFightResults.size() == 0)
+        if (unregistredFightResults.size() == 0)
             return;
 
         try {
@@ -53,7 +52,7 @@ public class ChallongeService {
 
             List<Match> matches = challonge.getMatches(tournament);
             Map<String, Long> mapPlayerNameToPlayerId = challonge.getParticipants(tournament).stream()
-                    .collect(Collectors.toMap(Participant :: getName, Participant :: getId));
+                    .collect(Collectors.toMap(Participant::getName, Participant::getId));
 
             for (FightResult fightResult : unregistredFightResults) {
                 Long playerOneId = mapPlayerNameToPlayerId.get(fightResult.getOne().getName());
@@ -62,7 +61,7 @@ public class ChallongeService {
                         || match.getPlayer1Id().equals(playerTwoId) && match.getPlayer2Id().equals(playerOneId))
                         .findFirst().orElse(null);
 
-                if(chosenMatch != null) {
+                if (chosenMatch != null) {
                     MatchQuery matchQuery = null;
                     if (playerOneId.equals(chosenMatch.getPlayer1Id())) {
                         matchQuery = getMatchQuery(chosenMatch, fightResult.getResultOne(), fightResult.getResultTwo());

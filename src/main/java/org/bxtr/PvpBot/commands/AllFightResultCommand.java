@@ -7,7 +7,6 @@ import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.repository.FightResultRepositoryJPA;
 import org.bxtr.PvpBot.service.FightResultService;
 import org.bxtr.PvpBot.service.PlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
@@ -15,7 +14,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
@@ -87,7 +85,7 @@ public class AllFightResultCommand extends BotCommand {
         }
 
         //TODO сделать получше.
-        if(sendMessage.getText().length() > 4000) {
+        if (sendMessage.getText().length() > 4000) {
             String text = sendMessage.getText();
             int index = text.indexOf("\n", 3900);
             String firstSubstring = text.substring(0, index);

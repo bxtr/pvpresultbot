@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.service.PlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
@@ -12,7 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class FriendCodeListCommand extends BotCommand {
         List<Player> all = playerService.findAll();
         all.sort((one, two) -> one.getName().compareToIgnoreCase(two.getName()));
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
-        if(all.size() > 0) {
+        if (all.size() > 0) {
             final StringBuilder stringBuilder = new StringBuilder();
             all.forEach(player -> {
                 stringBuilder.append(Utils.safeToString(player.getName()))

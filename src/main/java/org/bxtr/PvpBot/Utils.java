@@ -14,14 +14,14 @@ public class Utils {
 
     public static String commandInputToString(User user, Chat chat, String command, String[] arguments) {
         StringBuilder stringBuilder = new StringBuilder().append("User:");
-        if(user != null)
+        if (user != null)
             stringBuilder.append(Utils.safeToString(user.getUserName()));
         else
             stringBuilder.append("###");
         stringBuilder.append(" Command:").append(Utils.safeToString(command));
         stringBuilder.append(" Arg:");
-        if(arguments.length > 0)
-            for(String str : arguments)
+        if (arguments.length > 0)
+            for (String str : arguments)
                 stringBuilder.append(Utils.safeToString(str)).append(";");
         else
             stringBuilder.append("###");

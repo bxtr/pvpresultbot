@@ -1,13 +1,11 @@
 package org.bxtr.PvpBot.commands;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.repository.FightResultRepositoryJPA;
 import org.bxtr.PvpBot.service.FightResultService;
 import org.bxtr.PvpBot.service.PlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
@@ -15,7 +13,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +73,7 @@ public class AddFightResultCommand extends BotCommand {
                     errors.add("Первый игрок не найден. Возможно, не правильно написан ник или он не зарегестрирован");
                 if (!checkPlayer(player2.toLowerCase()))
                     errors.add("Второй игрок не найден. Возможно, не правильно написан ник или он не зарегестрирован");
-                if(player1.equals(player2))
+                if (player1.equals(player2))
                     errors.add("Нельзя добавить результаты сражений между одним и тем же человеком");
                 if (!checkScore(scorePlayer1))
                     errors.add("Счет для первого игрока неправильно указан, допустимо указывать значение от 0 до 3");

@@ -2,7 +2,6 @@ package org.bxtr.PvpBot.service;
 
 import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.repository.FightResultRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

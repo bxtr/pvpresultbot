@@ -16,11 +16,13 @@ public class FightResult {
 
     @ManyToOne
     @JoinColumn(name = "ONE", referencedColumnName = "ID")
-    @EqualsAndHashCode.Exclude private Player one;
+    @EqualsAndHashCode.Exclude
+    private Player one;
 
     @ManyToOne
     @JoinColumn(name = "TWO", referencedColumnName = "ID")
-    @EqualsAndHashCode.Exclude private Player two;
+    @EqualsAndHashCode.Exclude
+    private Player two;
 
     @Column(name = "RESULT_ONE")
     private Integer resultOne;
@@ -36,7 +38,7 @@ public class FightResult {
     }
 
     public Player getWinner() {
-        if(resultOne != null && resultTwo != null
+        if (resultOne != null && resultTwo != null
                 && resultOne > resultTwo) {
             return one;
         }

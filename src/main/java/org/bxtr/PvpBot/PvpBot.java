@@ -173,7 +173,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         try {
             if (!query.isEmpty()) {
                 List<Player> results = playerService.findLike(query);
-                if(results.size() > 0)
+                if (results.size() > 0)
                     execute(converteResultsToResponse(inlineQuery, results));
             } else {
                 execute(converteResultsToResponse(inlineQuery, new ArrayList<>()));
