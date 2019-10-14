@@ -24,14 +24,13 @@ import java.util.*;
 public class LeaderboardCommand extends BotCommand {
     public final static String DESCRIPTION = "Лидербоард.";
 
-    @Autowired
-    private FightResultService fightResultService;
+    private final FightResultService fightResultService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private PlayerService playerService;
-
-    public LeaderboardCommand() {
+    public LeaderboardCommand(FightResultService fightResultService, PlayerService playerService) {
         super("leader", DESCRIPTION);
+        this.fightResultService = fightResultService;
+        this.playerService = playerService;
     }
 
     @Override

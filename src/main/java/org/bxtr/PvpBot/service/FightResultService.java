@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class FightResultService {
 
-    @Autowired
-    private FightResultRepository fightResultRepository;
+    private final FightResultRepository fightResultRepository;
+
+    public FightResultService(FightResultRepository fightResultRepository) {
+        this.fightResultRepository = fightResultRepository;
+    }
 
     public void saveResult(FightResult fightResult) {
         fightResultRepository.save(fightResult);

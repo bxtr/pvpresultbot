@@ -18,11 +18,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Scope("singleton")
 public class UpdateResultsOnChallongeCommand extends BotCommand {
 
-    @Autowired
-    private ChallongeService challongeService;
+    private final ChallongeService challongeService;
 
-    public UpdateResultsOnChallongeCommand() {
+    public UpdateResultsOnChallongeCommand(ChallongeService challongeService) {
         super("update", "Обновит результаты на Challonge.");
+        this.challongeService = challongeService;
     }
 
     @Override

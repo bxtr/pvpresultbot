@@ -22,7 +22,7 @@ public class Team {
     @JoinColumn(name = "TOURNAMENT_ID", referencedColumnName = "ID")
     private Tournament tournament;
 
-    @Lob
+
     @Column(name = "IMAGE")
     private byte[] image;
 }

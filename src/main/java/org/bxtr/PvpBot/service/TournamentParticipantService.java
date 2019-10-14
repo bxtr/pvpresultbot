@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class TournamentParticipantService {
 
-    @Autowired
-    private TournamentParticipantRepository tournamentParticipantRepository;
+    private final TournamentParticipantRepository tournamentParticipantRepository;
+
+    public TournamentParticipantService(TournamentParticipantRepository tournamentParticipantRepository) {
+        this.tournamentParticipantRepository = tournamentParticipantRepository;
+    }
 
 
     public List<TournamentParticipant> getAll() {

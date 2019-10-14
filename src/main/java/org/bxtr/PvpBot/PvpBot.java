@@ -38,35 +38,21 @@ import java.util.*;
 @Scope("singleton")
 public class PvpBot extends TelegramLongPollingCommandBot {
 
-    @Autowired
-    private TelegramBotsApi telegramBotsApi;
-    @Autowired
-    private AddPlayerCommand addPlayerCommand;
-    @Autowired
-    private AddFightResultCommand addFightResultCommand;
-    @Autowired
-    private AllFightResultCommand allFightResultCommand;
-    @Autowired
-    private AllPlayersCommand allPlayersCommand;
-    @Autowired
-    private HelpCommand helpCommand;
-    @Autowired
-    private LeaderboardCommand leaderboardCommand;
-    @Autowired
-    private UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand;
-    @Autowired
-    private FriendCodeListCommand friendCodeListCommand;
-    @Autowired
-    private AddFightResultShortCommand addFightResultShortCommand;
-    @Autowired
-    private DoesNotPlayWithCommand doesNotPlayWithCommand;
+    private final TelegramBotsApi telegramBotsApi;
+    private final AddPlayerCommand addPlayerCommand;
+    private final AddFightResultCommand addFightResultCommand;
+    private final AllFightResultCommand allFightResultCommand;
+    private final AllPlayersCommand allPlayersCommand;
+    private final HelpCommand helpCommand;
+    private final LeaderboardCommand leaderboardCommand;
+    private final UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand;
+    private final FriendCodeListCommand friendCodeListCommand;
+    private final AddFightResultShortCommand addFightResultShortCommand;
+    private final DoesNotPlayWithCommand doesNotPlayWithCommand;
 
-    @Autowired
-    private PlayerService playerService;
-    @Autowired
-    private TeamService teamService;
-    @Autowired
-    private TournamentService tournamentService;
+    private final PlayerService playerService;
+    private final TeamService teamService;
+    private final TournamentService tournamentService;
 
     private static final Integer CACHETIME = 86400;
 
@@ -74,7 +60,12 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private String TOKEN;
 
 
-    public PvpBot(@Autowired DefaultBotOptions options) {
+    public PvpBot(@Autowired DefaultBotOptions options, TelegramBotsApi telegramBotsApi, AddFightResultShortCommand addFightResultShortCommand,
+                  AddPlayerCommand addPlayerCommand, AddFightResultCommand addFightResultCommand, AllFightResultCommand allFightResultCommand,
+                  AllPlayersCommand allPlayersCommand, HelpCommand helpCommand, LeaderboardCommand leaderboardCommand,
+                  UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand, FriendCodeListCommand friendCodeListCommand,
+                  DoesNotPlayWithCommand doesNotPlayWithCommand, PlayerService playerService, TournamentService tournamentService,
+                  TeamService teamService) {
         super(options, "PvpResultBot");
 
         registerDefaultAction((absSender, message) -> {
@@ -83,6 +74,20 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             commandUnknownMessage.setText("The command '" + message.getText() + "' is not known by this bot.");
             Utils.send(absSender, commandUnknownMessage);
         });
+        this.telegramBotsApi = telegramBotsApi;
+        this.addFightResultShortCommand = addFightResultShortCommand;
+        this.addPlayerCommand = addPlayerCommand;
+        this.addFightResultCommand = addFightResultCommand;
+        this.allFightResultCommand = allFightResultCommand;
+        this.allPlayersCommand = allPlayersCommand;
+        this.helpCommand = helpCommand;
+        this.leaderboardCommand = leaderboardCommand;
+        this.updateResultsOnChallongeCommand = updateResultsOnChallongeCommand;
+        this.friendCodeListCommand = friendCodeListCommand;
+        this.doesNotPlayWithCommand = doesNotPlayWithCommand;
+        this.playerService = playerService;
+        this.tournamentService = tournamentService;
+        this.teamService = teamService;
     }
 
     @PostConstruct

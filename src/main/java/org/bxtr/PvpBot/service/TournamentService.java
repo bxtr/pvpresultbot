@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TournamentService {
 
-    @Autowired
-    private TournamentCrudRepository tournamentCrudRepository;
+    private final TournamentCrudRepository tournamentCrudRepository;
+
+    public TournamentService(TournamentCrudRepository tournamentCrudRepository) {
+        this.tournamentCrudRepository = tournamentCrudRepository;
+    }
 
     public Tournament getTournament() {
         return tournamentCrudRepository.findById(1L).orElse(null);
