@@ -8,14 +8,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamService {
 
-    @Autowired
-    private TeamRepositoryJPA teamRepositoryJPA;
+    private final TeamRepositoryJPA teamRepositoryJPA;
+
+    public TeamService(TeamRepositoryJPA teamRepositoryJPA) {
+        this.teamRepositoryJPA = teamRepositoryJPA;
+    }
 
     public void save(Team team) {
         teamRepositoryJPA.save(team);
     }
 
     public Team find(String playerName) {
-        return teamRepositoryJPA.getTeam(playerName);
+        return teamRepositoryJPA.getByPlayer_Name(playerName);
     }
 }

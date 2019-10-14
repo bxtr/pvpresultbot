@@ -28,17 +28,17 @@ import java.util.stream.Collectors;
 @Log4j2
 public class DoesNotPlayWithCommand extends BotCommand {
 
-    @Autowired
-    private TournamentParticipantService tournamentParticipantService;
+    private final TournamentParticipantService tournamentParticipantService;
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private FightResultRepositoryJPA fightResultRepositoryJPA;
+    private final FightResultRepositoryJPA fightResultRepositoryJPA;
 
-    public DoesNotPlayWithCommand() {
+    public DoesNotPlayWithCommand(TournamentParticipantService tournamentParticipantService, PlayerService playerService, FightResultRepositoryJPA fightResultRepositoryJPA) {
         super("/not", "Покажет всех игроков, с которыми еще не играли в этот турнир.");
+        this.tournamentParticipantService = tournamentParticipantService;
+        this.playerService = playerService;
+        this.fightResultRepositoryJPA = fightResultRepositoryJPA;
     }
 
     @Override

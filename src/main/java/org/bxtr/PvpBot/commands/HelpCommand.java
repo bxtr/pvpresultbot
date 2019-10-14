@@ -23,15 +23,14 @@ public class HelpCommand extends BotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), strings));
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("/new ").append(AddPlayerCommand.DESCRIPTION).append("\n\n")
-                .append("/add ").append(AddFightResultCommand.DESCRIPTION).append("\n\n")
-                .append("/all ").append(AllPlayersCommand.DESCRIPTION).append("\n\n")
-                .append("/results ").append(AllFightResultCommand.DESCRIPTION).append("\n\n")
-                .append("/leader ").append(LeaderboardCommand.DESCRIPTION);
 
+        String stringBuilder = "/new " + AddPlayerCommand.DESCRIPTION + "\n\n" +
+                "/add " + AddFightResultCommand.DESCRIPTION + "\n\n" +
+                "/all " + AllPlayersCommand.DESCRIPTION + "\n\n" +
+                "/results " + AllFightResultCommand.DESCRIPTION + "\n\n" +
+                "/leader " + LeaderboardCommand.DESCRIPTION;
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId())
-                .setText(stringBuilder.toString());
+                .setText(stringBuilder);
 
         Utils.send(absSender, sendMessage);
     }

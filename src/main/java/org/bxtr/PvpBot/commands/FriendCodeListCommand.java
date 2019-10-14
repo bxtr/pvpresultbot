@@ -21,11 +21,11 @@ import java.util.List;
 @Scope("singleton")
 public class FriendCodeListCommand extends BotCommand {
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    public FriendCodeListCommand() {
+    public FriendCodeListCommand(PlayerService playerService) {
         super("friends", "Не обновленный список друзей.");
+        this.playerService = playerService;
     }
 
     @Override

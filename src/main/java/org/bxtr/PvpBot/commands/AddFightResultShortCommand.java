@@ -19,14 +19,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Scope("singleton")
 public class AddFightResultShortCommand extends BotCommand {
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private AddFightResultCommand addFightResultCommand;
+    private final AddFightResultCommand addFightResultCommand;
 
-    public AddFightResultShortCommand() {
+    public AddFightResultShortCommand(PlayerService playerService, AddFightResultCommand addFightResultCommand) {
         super("short", "Добавления результатов бой, без указания первого игрока.");
+        this.playerService = playerService;
+        this.addFightResultCommand = addFightResultCommand;
     }
 
 

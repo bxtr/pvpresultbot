@@ -22,11 +22,11 @@ import java.util.List;
 public class AllPlayersCommand extends BotCommand {
     public final static String DESCRIPTION = "Все зарегистрированные игроки.";
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    public AllPlayersCommand() {
+    public AllPlayersCommand(PlayerService playerService) {
         super("all", DESCRIPTION);
+        this.playerService = playerService;
     }
 
     @Override

@@ -25,17 +25,17 @@ import java.util.List;
 public class AllFightResultCommand extends BotCommand {
     public final static String DESCRIPTION = "Результаты сражений. Без указания игрока - все, с игроком - по фильтру.";
 
-    @Autowired
-    private FightResultService fightResultService;
+    private final FightResultService fightResultService;
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private FightResultRepositoryJPA fightResultRepositoryJPA;
+    private final FightResultRepositoryJPA fightResultRepositoryJPA;
 
-    public AllFightResultCommand() {
+    public AllFightResultCommand(FightResultService fightResultService, PlayerService playerService, FightResultRepositoryJPA fightResultRepositoryJPA) {
         super("results", DESCRIPTION);
+        this.fightResultService = fightResultService;
+        this.playerService = playerService;
+        this.fightResultRepositoryJPA = fightResultRepositoryJPA;
     }
 
     @Override

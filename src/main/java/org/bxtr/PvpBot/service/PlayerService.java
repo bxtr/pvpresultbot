@@ -12,8 +12,11 @@ import java.util.List;
 @Service
 public class PlayerService {
 
-    @Autowired
     private PlayerCrudRepository playerCrudRepository;
+
+    public PlayerService(PlayerCrudRepository playerCrudRepository) {
+        this.playerCrudRepository = playerCrudRepository;
+    }
 
     public void createPlayer(String name) {
         if (name == null)

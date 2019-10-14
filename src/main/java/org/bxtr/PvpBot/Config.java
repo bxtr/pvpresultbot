@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.validation.annotation.Validated;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+
+import javax.validation.constraints.NotNull;
 
 
 @EnableJpaRepositories
@@ -21,6 +24,9 @@ class Config {
     @Value("${pvpbot.proxy.port}")
     private int PROXY_PORT;
 
+    @Value("${pvpbot.proxy.enable}")
+    private boolean proxyIsEnable;
+
     @Bean
     @Scope("singleton")
     public TelegramBotsApi getTelegramBotsApi() {
@@ -32,9 +38,11 @@ class Config {
     public DefaultBotOptions getBotOptions() {
         ApiContextInitializer.init();
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
-        botOptions.setProxyHost(PROXY_HOST);
-        botOptions.setProxyPort(PROXY_PORT);
-        botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS4);
+        if (proxyIsEnable) {
+            botOptions.setProxyHost(PROXY_HOST);
+            botOptions.setProxyPort(PROXY_PORT);
+            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS4);
+        }
         return botOptions;
     }
 }

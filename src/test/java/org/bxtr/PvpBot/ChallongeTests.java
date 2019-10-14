@@ -11,6 +11,7 @@ import at.stefangeyer.challonge.rest.retrofit.RetrofitRestClient;
 import at.stefangeyer.challonge.serializer.gson.GsonSerializer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -21,14 +22,23 @@ import java.util.stream.Collectors;
 @SpringBootTest
 public class ChallongeTests {
 
+    @Value("${pvpbot.challonge.token}")
+    private String challongeToken;
+
+    @Value("${pvpbot.challonge.username}")
+    private String challongeUserName;
+
+    @Value("{pvpBot.challonge.curentTournament}")
+    private String currentTournament;
+
     @Test
     public void getTournaments() {
-        Credentials credentials = new Credentials("bxtr2121", "PAsygdCYddvMboCGGBTDSE8DWjXpNFBgmJvA28yk");
+        Credentials credentials = new Credentials(challongeUserName, challongeToken);
         Challonge challonge = new Challonge(credentials, new GsonSerializer(), new RetrofitRestClient());
         Tournament tournament = null;
         try {
             tournament = challonge.getTournaments().stream()
-                    .filter(item -> item.getName().equals("Бот-тест"))
+                    .filter(item -> item.getName().equals(currentTournament))
                     .findFirst().orElse(null);
 
             List<Match> matches = challonge.getMatches(tournament);

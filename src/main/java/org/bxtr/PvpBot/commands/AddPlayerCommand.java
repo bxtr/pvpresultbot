@@ -20,11 +20,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class AddPlayerCommand extends BotCommand {
     public final static String DESCRIPTION = "Добавить нового игрока. Добавлять через ник в телеге. Пример: /new @bxtr21";
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    public AddPlayerCommand() {
+    public AddPlayerCommand(PlayerService playerService) {
         super("new", DESCRIPTION);
+        this.playerService = playerService;
     }
 
     @Override

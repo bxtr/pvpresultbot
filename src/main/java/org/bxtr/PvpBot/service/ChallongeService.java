@@ -3,6 +3,7 @@ package org.bxtr.PvpBot.service;
 import at.stefangeyer.challonge.Challonge;
 import at.stefangeyer.challonge.model.Credentials;
 import at.stefangeyer.challonge.model.Match;
+import at.stefangeyer.challonge.model.Participant;
 import at.stefangeyer.challonge.model.Tournament;
 import at.stefangeyer.challonge.model.query.MatchQuery;
 import at.stefangeyer.challonge.rest.retrofit.RetrofitRestClient;
@@ -21,14 +22,20 @@ import java.util.stream.Collectors;
 @Scope("singleton")
 public class ChallongeService {
 
-    @Autowired
-    FightResultService fightResultService;
+    private final FightResultService fightResultService;
 
     @Value("${pvpbot.challonge.username}")
     private String userName;
 
     @Value("${pvpbot.challonge.token}")
     private String token;
+
+    @Value("{pvpBot.challonge.curentTournament}")
+    private String currentTournament;
+
+    public ChallongeService(FightResultService fightResultService) {
+        this.fightResultService = fightResultService;
+    }
 
     public void update() {
         Credentials credentials = new Credentials(userName, token);
@@ -41,12 +48,12 @@ public class ChallongeService {
 
         try {
             Tournament tournament = challonge.getTournaments().stream()
-                    .filter(item -> item.getName().equals("Sinister cup"))
+                    .filter(item -> item.getName().equals(currentTournament))
                     .findFirst().orElse(null);
 
             List<Match> matches = challonge.getMatches(tournament);
             Map<String, Long> mapPlayerNameToPlayerId = challonge.getParticipants(tournament).stream()
-                    .collect(Collectors.toMap(item -> item.getName(), item -> item.getId()));
+                    .collect(Collectors.toMap(Participant :: getName, Participant :: getId));
 
             for (FightResult fightResult : unregistredFightResults) {
                 Long playerOneId = mapPlayerNameToPlayerId.get(fightResult.getOne().getName());

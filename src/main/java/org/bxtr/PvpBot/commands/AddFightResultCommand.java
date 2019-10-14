@@ -1,5 +1,6 @@
 package org.bxtr.PvpBot.commands;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.FightResult;
@@ -25,17 +26,17 @@ import java.util.List;
 public class AddFightResultCommand extends BotCommand {
     public final static String DESCRIPTION = "Добавить результат сражения. Для этого надо, чтобы оба игрока были зарегистрированны. Пример: /add @bxtr21 @pvpoke 1 2";
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private FightResultRepositoryJPA fightResultRepositoryJPA;
+    private final FightResultRepositoryJPA fightResultRepositoryJPA;
 
-    @Autowired
-    private FightResultService fightResultService;
+    private final FightResultService fightResultService;
 
-    public AddFightResultCommand() {
+    public AddFightResultCommand(PlayerService playerService, FightResultRepositoryJPA fightResultRepositoryJPA, FightResultService fightResultService) {
         super("add", DESCRIPTION);
+        this.playerService = playerService;
+        this.fightResultRepositoryJPA = fightResultRepositoryJPA;
+        this.fightResultService = fightResultService;
     }
 
     @Override

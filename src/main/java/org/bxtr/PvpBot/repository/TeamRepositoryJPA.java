@@ -8,9 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeamRepositoryJPA extends JpaRepository<Team, Long> {
-
-    @Query(value = "SELECT team.* FROM team " +
-            "JOIN player ON player.id = team.player_id " +
-            "WHERE player.NAME = :player_name", nativeQuery = true)
-    Team getTeam(@Value("player_name") String playerName);
+    Team getByPlayer_Name(String playerName);
 }
