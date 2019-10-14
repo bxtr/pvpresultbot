@@ -33,21 +33,27 @@ public class AddFightResultShortCommand extends BotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), strings));
-        String userName = user.getUserName();
-        Player player = userName != null ? playerService.findPlayer("@" + userName) : null;
-        if (player != null) {
-            String[] arguments = new String[4];
-            arguments[0] = player.getName();
-            arguments[1] = strings[0];
-            arguments[2] = strings[1];
-            arguments[3] = strings[2];
-            addFightResultCommand.execute(absSender, user, chat, arguments);
-        } else {
-            SendMessage sendMessage = new SendMessage()
-                    .setChatId(chat.getId())
-                    .setText("Вы не зарегистрированы в боте.");
+        if(strings != null && strings.length == 3) {
+            String userName = user.getUserName();
+            Player player = userName != null ? playerService.findPlayer("@" + userName) : null;
+            if (player != null) {
+                String[] arguments = new String[4];
+                arguments[0] = player.getName();
+                arguments[1] = strings[0];
+                arguments[2] = strings[1];
+                arguments[3] = strings[2];
+                addFightResultCommand.execute(absSender, user, chat, arguments);
+            } else {
+                SendMessage sendMessage = new SendMessage()
+                        .setChatId(chat.getId())
+                        .setText("Вы не зарегистрированы в боте.");
 
-            Utils.send(absSender, sendMessage);
+                Utils.send(absSender, sendMessage);
+            }
+        } else {
+            Utils.send(absSender, new SendMessage()
+                            .setText("Неверное количество аргументов")
+                            .setChatId(chat.getId()));
         }
     }
 }
