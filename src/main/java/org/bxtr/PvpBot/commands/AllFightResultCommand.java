@@ -86,7 +86,20 @@ public class AllFightResultCommand extends BotCommand {
             }
         }
 
-        Utils.send(absSender, sendMessage);
+        //TODO сделать получше.
+        if(sendMessage.getText().length() > 4000) {
+            String text = sendMessage.getText();
+            int index = text.indexOf("\n", 3900);
+            String firstSubstring = text.substring(0, index);
+            String secondSubstring = text.substring(index);
+            SendMessage sendMessageOne = new SendMessage().setText(firstSubstring).setChatId(chat.getId());
+            SendMessage sendMessageTwo = new SendMessage().setText(secondSubstring).setChatId(chat.getId());
+            Utils.send(absSender, sendMessageOne);
+            Utils.send(absSender, sendMessageTwo);
+        } else {
+            Utils.send(absSender, sendMessage);
+        }
+
     }
 
 }
