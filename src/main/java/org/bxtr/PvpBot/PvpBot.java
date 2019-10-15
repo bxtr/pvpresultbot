@@ -18,7 +18,6 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -51,6 +50,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private final AddFightResultShortCommand addFightResultShortCommand;
     private final DoesNotPlayWithCommand doesNotPlayWithCommand;
     private final RegisterPlayerCommand registerPlayerCommand;
+    private final FriendInfoUpdateCommand friendInfoUpdateCommand;
 
     private final PlayerService playerService;
     private final TeamService teamService;
@@ -67,7 +67,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
                   AllPlayersCommand allPlayersCommand, HelpCommand helpCommand, LeaderboardCommand leaderboardCommand,
                   UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand, FriendCodeListCommand friendCodeListCommand,
                   DoesNotPlayWithCommand doesNotPlayWithCommand, RegisterPlayerCommand registerPlayerCommand,
-                  AddPlayerCommand addPlayerCommand,
+                  AddPlayerCommand addPlayerCommand, FriendInfoUpdateCommand friendInfoUpdateCommand,
                   PlayerService playerService, TournamentService tournamentService, TeamService teamService) {
         super(options, "PvpResultBot");
 
@@ -89,6 +89,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         this.friendCodeListCommand = friendCodeListCommand;
         this.doesNotPlayWithCommand = doesNotPlayWithCommand;
         this.registerPlayerCommand = registerPlayerCommand;
+        this.friendInfoUpdateCommand = friendInfoUpdateCommand;
+
         this.playerService = playerService;
         this.tournamentService = tournamentService;
         this.teamService = teamService;
@@ -109,6 +111,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             registerLog(addFightResultShortCommand);
             registerLog(doesNotPlayWithCommand);
             registerLog(registerPlayerCommand);
+            registerLog(friendInfoUpdateCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }

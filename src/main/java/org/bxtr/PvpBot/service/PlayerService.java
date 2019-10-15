@@ -41,4 +41,10 @@ public class PlayerService {
             return playerCrudRepository.findByNameContaining(name.toLowerCase());
         return Collections.emptyList();
     }
+
+    public void updatePlayer(Player player) {
+        if (player == null)
+            return;
+        playerCrudRepository.save(player);
+    }
 }

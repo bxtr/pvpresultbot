@@ -26,6 +26,7 @@ public class RegisterPlayerCommand extends BotCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+        Utils.commandInputToString(user, chat, this.getCommandIdentifier(), arguments);
         String userName = "@" + Utils.safeToString(user.getUserName());
         Player player = playerService.findPlayer(userName);
         SendMessage sendMessage = new SendMessage()
