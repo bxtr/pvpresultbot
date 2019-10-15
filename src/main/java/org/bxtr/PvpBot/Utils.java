@@ -35,4 +35,15 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    /*    private InlineKeyboardMarkup getInlineKeyboardMarkup(String playerName) {
+        InlineKeyboardButton button = new InlineKeyboardButton()
+                .setText("Регистрация").setCallbackData(playerName);
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(button);
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(row);
+        return new InlineKeyboardMarkup()
+                .setKeyboard(keyboard);
+    }*/
 }

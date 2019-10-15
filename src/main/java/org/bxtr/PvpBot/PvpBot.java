@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -39,7 +40,7 @@ import java.util.*;
 public class PvpBot extends TelegramLongPollingCommandBot {
 
     private final TelegramBotsApi telegramBotsApi;
-    private final AddPlayerCommand addPlayerCommand;
+    //private final AddPlayerCommand addPlayerCommand;
     private final AddFightResultCommand addFightResultCommand;
     private final AllFightResultCommand allFightResultCommand;
     private final AllPlayersCommand allPlayersCommand;
@@ -49,6 +50,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private final FriendCodeListCommand friendCodeListCommand;
     private final AddFightResultShortCommand addFightResultShortCommand;
     private final DoesNotPlayWithCommand doesNotPlayWithCommand;
+    private final RegisterPlayerCommand registerPlayerCommand;
 
     private final PlayerService playerService;
     private final TeamService teamService;
@@ -61,10 +63,10 @@ public class PvpBot extends TelegramLongPollingCommandBot {
 
 
     public PvpBot(@Autowired DefaultBotOptions options, TelegramBotsApi telegramBotsApi, AddFightResultShortCommand addFightResultShortCommand,
-                  AddPlayerCommand addPlayerCommand, AddFightResultCommand addFightResultCommand, AllFightResultCommand allFightResultCommand,
+                  AddFightResultCommand addFightResultCommand, AllFightResultCommand allFightResultCommand,
                   AllPlayersCommand allPlayersCommand, HelpCommand helpCommand, LeaderboardCommand leaderboardCommand,
                   UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand, FriendCodeListCommand friendCodeListCommand,
-                  DoesNotPlayWithCommand doesNotPlayWithCommand, PlayerService playerService, TournamentService tournamentService,
+                  DoesNotPlayWithCommand doesNotPlayWithCommand, RegisterPlayerCommand registerPlayerCommand, PlayerService playerService, TournamentService tournamentService,
                   TeamService teamService) {
         super(options, "PvpResultBot");
 
@@ -76,7 +78,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         });
         this.telegramBotsApi = telegramBotsApi;
         this.addFightResultShortCommand = addFightResultShortCommand;
-        this.addPlayerCommand = addPlayerCommand;
+       //this.addPlayerCommand = addPlayerCommand;
         this.addFightResultCommand = addFightResultCommand;
         this.allFightResultCommand = allFightResultCommand;
         this.allPlayersCommand = allPlayersCommand;
@@ -85,6 +87,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         this.updateResultsOnChallongeCommand = updateResultsOnChallongeCommand;
         this.friendCodeListCommand = friendCodeListCommand;
         this.doesNotPlayWithCommand = doesNotPlayWithCommand;
+        this.registerPlayerCommand = registerPlayerCommand;
         this.playerService = playerService;
         this.tournamentService = tournamentService;
         this.teamService = teamService;
@@ -94,7 +97,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private void postConstruct() {
         try {
             telegramBotsApi.registerBot(this);
-            registerLog(addPlayerCommand);
+            //registerLog(addPlayerCommand);
             registerLog(addFightResultCommand);
             registerLog(allPlayersCommand);
             registerLog(allFightResultCommand);
@@ -104,6 +107,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             registerLog(friendCodeListCommand);
             registerLog(addFightResultShortCommand);
             registerLog(doesNotPlayWithCommand);
+            registerLog(registerPlayerCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
@@ -123,6 +127,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     public void processNonCommandUpdate(Update update) {
         if (update.hasInlineQuery()) {
             handleIncomingInlineQuery(update.getInlineQuery());
+        } else if (update.hasCallbackQuery()) {
+            log.debug("callback query");
         } else if (update.hasMessage() && update.getMessage().hasPhoto()) {
             String userName = update.getMessage().getFrom().getUserName();
             log.info(String.format("@%s загружает команду", userName));
