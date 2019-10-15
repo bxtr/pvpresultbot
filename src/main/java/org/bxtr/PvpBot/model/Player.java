@@ -1,6 +1,7 @@
 package org.bxtr.PvpBot.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
  */
 @EqualsAndHashCode
 @Entity
+@ToString
 @Table(name = "PLAYER")
 public class Player {
 
