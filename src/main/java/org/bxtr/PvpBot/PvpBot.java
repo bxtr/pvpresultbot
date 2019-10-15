@@ -40,7 +40,7 @@ import java.util.*;
 public class PvpBot extends TelegramLongPollingCommandBot {
 
     private final TelegramBotsApi telegramBotsApi;
-    //private final AddPlayerCommand addPlayerCommand;
+    private final AddPlayerCommand addPlayerCommand;
     private final AddFightResultCommand addFightResultCommand;
     private final AllFightResultCommand allFightResultCommand;
     private final AllPlayersCommand allPlayersCommand;
@@ -66,8 +66,9 @@ public class PvpBot extends TelegramLongPollingCommandBot {
                   AddFightResultCommand addFightResultCommand, AllFightResultCommand allFightResultCommand,
                   AllPlayersCommand allPlayersCommand, HelpCommand helpCommand, LeaderboardCommand leaderboardCommand,
                   UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand, FriendCodeListCommand friendCodeListCommand,
-                  DoesNotPlayWithCommand doesNotPlayWithCommand, RegisterPlayerCommand registerPlayerCommand, PlayerService playerService, TournamentService tournamentService,
-                  TeamService teamService) {
+                  DoesNotPlayWithCommand doesNotPlayWithCommand, RegisterPlayerCommand registerPlayerCommand,
+                  AddPlayerCommand addPlayerCommand,
+                  PlayerService playerService, TournamentService tournamentService, TeamService teamService) {
         super(options, "PvpResultBot");
 
         registerDefaultAction((absSender, message) -> {
@@ -78,7 +79,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         });
         this.telegramBotsApi = telegramBotsApi;
         this.addFightResultShortCommand = addFightResultShortCommand;
-       //this.addPlayerCommand = addPlayerCommand;
+        this.addPlayerCommand = addPlayerCommand;
         this.addFightResultCommand = addFightResultCommand;
         this.allFightResultCommand = allFightResultCommand;
         this.allPlayersCommand = allPlayersCommand;
@@ -97,7 +98,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private void postConstruct() {
         try {
             telegramBotsApi.registerBot(this);
-            //registerLog(addPlayerCommand);
+            registerLog(addPlayerCommand);
             registerLog(addFightResultCommand);
             registerLog(allPlayersCommand);
             registerLog(allFightResultCommand);
