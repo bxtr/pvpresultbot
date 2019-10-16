@@ -40,64 +40,68 @@ public class AllFightResultCommand extends BotCommand {
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
         log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), arguments));
         SendMessage sendMessage = new SendMessage().setChatId(chat.getId());
-        if (arguments.length == 0) {
-            List<FightResult> results = fightResultService.findAll();
-            if (results.size() > 0) {
-                final StringBuilder stringBuilder = new StringBuilder();
-                results.forEach(result -> {
-                    stringBuilder.append(result.getOne().getName())
-                            .append(" ").append(result.getResultOne())
-                            .append(":")
-                            .append(result.getResultTwo()).append(" ")
-                            .append(result.getTwo().getName())
-                            .append("\n");
-                });
-                sendMessage.setText(stringBuilder.toString());
-            } else {
-                sendMessage.setText("Пока пусто");
-            }
-        } else if (arguments.length == 1) {
-            Player player = playerService.findPlayer(arguments[0]);
-            if (player != null) {
-                List<FightResult> fightResultWith = fightResultRepositoryJPA.findFightResultWith(player.getName());
-                final StringBuilder stringBuilder = new StringBuilder();
-                fightResultWith.forEach(result -> {
-                    if (result.getOne().equals(player)) {
+        if (arguments.length == 0 || arguments.length == 1) {
+            if (arguments.length == 0) {
+                List<FightResult> results = fightResultService.findAll();
+                if (results.size() > 0) {
+                    final StringBuilder stringBuilder = new StringBuilder();
+                    results.forEach(result -> {
                         stringBuilder.append(result.getOne().getName())
                                 .append(" ").append(result.getResultOne())
                                 .append(":")
                                 .append(result.getResultTwo()).append(" ")
                                 .append(result.getTwo().getName())
                                 .append("\n");
-                    } else {
-                        stringBuilder.append(result.getTwo().getName())
-                                .append(" ").append(result.getResultTwo())
-                                .append(":")
-                                .append(result.getResultOne()).append(" ")
-                                .append(result.getOne().getName())
-                                .append("\n");
-                    }
-                });
-                sendMessage.setText(stringBuilder.toString());
-            } else {
-                sendMessage.setText("Игрок не найден.");
+                    });
+                    sendMessage.setText(stringBuilder.toString());
+                } else {
+                    sendMessage.setText("Пока пусто");
+                }
+            } else if (arguments.length == 1) {
+                Player player = playerService.findPlayer(arguments[0]);
+                if (player != null) {
+                    List<FightResult> fightResultWith = fightResultRepositoryJPA.findFightResultWith(player.getName());
+                    final StringBuilder stringBuilder = new StringBuilder();
+                    fightResultWith.forEach(result -> {
+                        if (result.getOne().equals(player)) {
+                            stringBuilder.append(result.getOne().getName())
+                                    .append(" ").append(result.getResultOne())
+                                    .append(":")
+                                    .append(result.getResultTwo()).append(" ")
+                                    .append(result.getTwo().getName())
+                                    .append("\n");
+                        } else {
+                            stringBuilder.append(result.getTwo().getName())
+                                    .append(" ").append(result.getResultTwo())
+                                    .append(":")
+                                    .append(result.getResultOne()).append(" ")
+                                    .append(result.getOne().getName())
+                                    .append("\n");
+                        }
+                    });
+                    sendMessage.setText(stringBuilder.toString());
+                } else {
+                    sendMessage.setText("Игрок не найден.");
+                }
             }
-        }
 
-        //TODO сделать получше.
-        if (sendMessage.getText().length() > 4000) {
-            String text = sendMessage.getText();
-            int index = text.indexOf("\n", 3900);
-            String firstSubstring = text.substring(0, index);
-            String secondSubstring = text.substring(index);
-            SendMessage sendMessageOne = new SendMessage().setText(firstSubstring).setChatId(chat.getId());
-            SendMessage sendMessageTwo = new SendMessage().setText(secondSubstring).setChatId(chat.getId());
-            Utils.send(absSender, sendMessageOne);
-            Utils.send(absSender, sendMessageTwo);
+            //TODO сделать получше.
+            if (sendMessage.getText().length() > 4000) {
+                String text = sendMessage.getText();
+                int index = text.indexOf("\n", 3900);
+                String firstSubstring = text.substring(0, index);
+                String secondSubstring = text.substring(index);
+                SendMessage sendMessageOne = new SendMessage().setText(firstSubstring).setChatId(chat.getId());
+                SendMessage sendMessageTwo = new SendMessage().setText(secondSubstring).setChatId(chat.getId());
+                Utils.send(absSender, sendMessageOne);
+                Utils.send(absSender, sendMessageTwo);
+            } else {
+                Utils.send(absSender, sendMessage);
+            }
         } else {
+            sendMessage.setText("Неверное количество аргументов");
             Utils.send(absSender, sendMessage);
         }
-
     }
 
 }
