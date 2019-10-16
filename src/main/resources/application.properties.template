@@ -13,3 +13,5 @@ pvpbot.challonge.username=****
 pvpBot.challonge.curentTournament=****
 # need for saving files to db
 hibernate.jdbc.use_streams_for_binary=true
+
+logging.path=logs
