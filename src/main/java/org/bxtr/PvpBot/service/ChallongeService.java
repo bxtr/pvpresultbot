@@ -8,7 +8,9 @@ import at.stefangeyer.challonge.model.Tournament;
 import at.stefangeyer.challonge.model.query.MatchQuery;
 import at.stefangeyer.challonge.rest.retrofit.RetrofitRestClient;
 import at.stefangeyer.challonge.serializer.gson.GsonSerializer;
+import lombok.RequiredArgsConstructor;
 import org.bxtr.PvpBot.model.FightResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Scope("singleton")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChallongeService {
 
     private final FightResultService fightResultService;
@@ -31,10 +34,6 @@ public class ChallongeService {
 
     @Value("${pvpBot.challonge.curentTournament}")
     private String currentTournament;
-
-    public ChallongeService(FightResultService fightResultService) {
-        this.fightResultService = fightResultService;
-    }
 
     public void update() {
         Credentials credentials = new Credentials(userName, token);

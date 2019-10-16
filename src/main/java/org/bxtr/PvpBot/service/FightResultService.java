@@ -1,20 +1,19 @@
 package org.bxtr.PvpBot.service;
 
+import lombok.RequiredArgsConstructor;
 import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.repository.FightResultRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FightResultService {
 
     private final FightResultRepository fightResultRepository;
-
-    public FightResultService(FightResultRepository fightResultRepository) {
-        this.fightResultRepository = fightResultRepository;
-    }
 
     public void saveResult(FightResult fightResult) {
         fightResultRepository.save(fightResult);

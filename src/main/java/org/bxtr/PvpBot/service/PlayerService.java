@@ -1,7 +1,9 @@
 package org.bxtr.PvpBot.service;
 
+import lombok.RequiredArgsConstructor;
 import org.bxtr.PvpBot.model.Player;
 import org.bxtr.PvpBot.repository.PlayerCrudRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,13 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PlayerService {
 
-    private PlayerCrudRepository playerCrudRepository;
-
-    public PlayerService(PlayerCrudRepository playerCrudRepository) {
-        this.playerCrudRepository = playerCrudRepository;
-    }
+    private final PlayerCrudRepository playerCrudRepository;
 
     public void createPlayer(String name) {
         if (name == null)
