@@ -4,10 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import org.bxtr.PvpBot.Utils;
 import org.bxtr.PvpBot.model.FightResult;
 import org.bxtr.PvpBot.model.Player;
+import org.bxtr.PvpBot.model.Tournament;
 import org.bxtr.PvpBot.model.TournamentParticipant;
 import org.bxtr.PvpBot.repository.FightResultRepositoryJPA;
 import org.bxtr.PvpBot.service.PlayerService;
 import org.bxtr.PvpBot.service.TournamentParticipantService;
+import org.bxtr.PvpBot.service.TournamentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
@@ -27,15 +30,21 @@ public class DoesNotPlayWithCommand extends BotCommand {
 
     private final TournamentParticipantService tournamentParticipantService;
 
+    private final TournamentService tournamentService;
+
     private final PlayerService playerService;
 
     private final FightResultRepositoryJPA fightResultRepositoryJPA;
 
-    public DoesNotPlayWithCommand(TournamentParticipantService tournamentParticipantService, PlayerService playerService, FightResultRepositoryJPA fightResultRepositoryJPA) {
+    public DoesNotPlayWithCommand(TournamentParticipantService tournamentParticipantService,
+                                  PlayerService playerService,
+                                  FightResultRepositoryJPA fightResultRepositoryJPA,
+                                  TournamentService tournamentService) {
         super("/not", "Покажет всех игроков, с которыми еще не играли в этот турнир.");
         this.tournamentParticipantService = tournamentParticipantService;
         this.playerService = playerService;
         this.fightResultRepositoryJPA = fightResultRepositoryJPA;
+        this.tournamentService = tournamentService;
     }
 
     @Override
@@ -49,7 +58,11 @@ public class DoesNotPlayWithCommand extends BotCommand {
                     Utils.safeToString(user.getUserName()))));
         }
 
-        List<TournamentParticipant> tournamentParticipant = tournamentParticipantService.getAll();
+        Tournament currentTournament = tournamentService.getCurrentTournament();
+        List<TournamentParticipant> tournamentParticipant = tournamentParticipantService.getAll().stream()
+                .filter(tournamentParticipant1 -> tournamentParticipant1.getTournament().getId().equals(currentTournament.getId()))
+                .collect(Collectors.toList());
+
         Set<Player> allOtherPlayersInTournament = tournamentParticipant.stream().map(item -> item.getPlayer())
                 .filter(item -> !player.equals(item))
                 .collect(Collectors.toSet());

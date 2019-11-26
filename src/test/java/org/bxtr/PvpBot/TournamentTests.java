@@ -21,7 +21,7 @@ public class TournamentTests {
     @Test
     public void getPlayersFromTournament() {
         TournamentService tournamentService = new TournamentService(tournamentCrudRepository);
-        Tournament tournament = tournamentService.getTournament();
+        Tournament tournament = tournamentService.getCurrentTournament();
         tournament.getPlayers().forEach(player -> log.debug(player));
     }
 }

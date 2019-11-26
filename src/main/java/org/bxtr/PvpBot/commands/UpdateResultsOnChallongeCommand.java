@@ -27,7 +27,7 @@ public class UpdateResultsOnChallongeCommand extends BotCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
         log.info(Utils.commandInputToString(user, chat, getCommandIdentifier(), arguments));
-        challongeService.update();
+        challongeService.update(arguments.length == 1 && arguments[0].equals("force"));
         try {
             absSender.execute(new SendMessage().setChatId(chat.getId()).setText("done."));
         } catch (TelegramApiException e) {

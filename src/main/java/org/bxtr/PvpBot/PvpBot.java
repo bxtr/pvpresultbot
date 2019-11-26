@@ -51,6 +51,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private final DoesNotPlayWithCommand doesNotPlayWithCommand;
     private final RegisterPlayerCommand registerPlayerCommand;
     private final FriendInfoUpdateCommand friendInfoUpdateCommand;
+    private final AddParticipantFromChallongeCommand addParticipantFromChallongeCommand;
+    private final AddTournamentCommand addTournamentCommand;
 
     private final PlayerService playerService;
     private final TeamService teamService;
@@ -68,6 +70,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
                   UpdateResultsOnChallongeCommand updateResultsOnChallongeCommand, FriendCodeListCommand friendCodeListCommand,
                   DoesNotPlayWithCommand doesNotPlayWithCommand, RegisterPlayerCommand registerPlayerCommand,
                   AddPlayerCommand addPlayerCommand, FriendInfoUpdateCommand friendInfoUpdateCommand,
+                  AddParticipantFromChallongeCommand addParticipantFromChallongeCommand,
+                  AddTournamentCommand addTournamentCommand,
                   PlayerService playerService, TournamentService tournamentService, TeamService teamService) {
         super(options, "PvpResultBot");
 
@@ -90,6 +94,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         this.doesNotPlayWithCommand = doesNotPlayWithCommand;
         this.registerPlayerCommand = registerPlayerCommand;
         this.friendInfoUpdateCommand = friendInfoUpdateCommand;
+        this.addParticipantFromChallongeCommand = addParticipantFromChallongeCommand;
+        this.addTournamentCommand = addTournamentCommand;
 
         this.playerService = playerService;
         this.tournamentService = tournamentService;
@@ -112,6 +118,8 @@ public class PvpBot extends TelegramLongPollingCommandBot {
             registerLog(doesNotPlayWithCommand);
             registerLog(registerPlayerCommand);
             registerLog(friendInfoUpdateCommand);
+            registerLog(addParticipantFromChallongeCommand);
+            registerLog(addTournamentCommand);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
@@ -143,7 +151,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
                 java.io.File file = downloadPhotoByFilePath(filePath);
                 Team team = new Team();
                 team.setPlayer(player);
-                team.setTournament(tournamentService.getTournament());
+                team.setTournament(tournamentService.getCurrentTournament());
                 try {
                     byte[] fileContent = Files.readAllBytes(file.toPath());
                     team.setImage(fileContent);
@@ -181,7 +189,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         String query = inlineQuery.getQuery();
         log.info(String.format("Searching: %s", query));
         try {
-            if (!query.isEmpty()) {
+            if (!query.isEmpty() && query.length() > 1) {
                 List<Player> results = playerService.findLike(query);
                 if (results.size() > 0)
                     execute(converteResultsToResponse(inlineQuery, results));

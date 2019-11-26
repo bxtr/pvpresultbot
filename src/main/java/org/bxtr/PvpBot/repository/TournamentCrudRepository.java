@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TournamentCrudRepository extends CrudRepository<Tournament, Long> {
+
+    Tournament findFirstByTournamentName(String tournamentName);
 }

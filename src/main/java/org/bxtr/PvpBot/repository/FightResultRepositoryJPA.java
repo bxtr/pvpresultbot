@@ -14,14 +14,14 @@ public interface FightResultRepositoryJPA extends JpaRepository<FightResult, Lon
     @Query(value = "SELECT * FROM fight_result " +
             "JOIN player one ON one.id = fight_result.one " +
             "JOIN player two ON two.id = fight_result.two " +
-            "WHERE (one.player_name = :player_one_name AND two.player_name = :player_two_name) " +
-            "OR (two.player_name = :player_one_name AND one.player_name = :player_two_name)", nativeQuery = true)
+            "WHERE (lower(one.player_name) = lower(:player_one_name) AND lower(two.player_name) = lower(:player_two_name)) " +
+            "OR (lower(two.player_name) = lower(:player_one_name) AND lower(one.player_name) = lower(:player_two_name))", nativeQuery = true)
     List<FightResult> findFightResultWith(@Param("player_one_name") String playerNameOne,
                                           @Param("player_two_name") String playerNameTwo);
 
     @Query(value = "SELECT * FROM fight_result " +
             "JOIN player one ON one.id = fight_result.one " +
             "JOIN player two ON two.id = fight_result.two " +
-            "WHERE one.player_name = :player_name or two.player_name = :player_name", nativeQuery = true)
+            "WHERE lower(one.player_name) = lower(:player_name) or lower(two.player_name) = lower(:player_name)", nativeQuery = true)
     List<FightResult> findFightResultWith(@Param("player_name") String playerName);
 }
