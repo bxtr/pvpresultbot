@@ -1,0 +1,31 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    url: jdbc:postgresql:<datasource>
+    username: postgres
+  jpa:
+    hibernate:
+      ddl_auto: validate
+      generate_ddl: false
+      use_streams_for_binary: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  flyway:
+    baseline_on_migrate: true
+    table: schema_history
+logging:
+  path: logs
+pvp_bot:
+  challonge:
+    curent_tournament: <tournament>
+    token: <token>
+    username: <username>
+  proxy:
+    host: <host>
+    port: <port>
+  telegram:
+    token: <token>
