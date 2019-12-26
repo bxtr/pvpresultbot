@@ -1,8 +1,8 @@
 package org.bxtr.pvp.bot.service;
 
 import lombok.AllArgsConstructor;
-import org.bxtr.pvp.bot.repository.PlayerCrudRepository;
 import org.bxtr.pvp.bot.domain.Player;
+import org.bxtr.pvp.bot.repository.PlayerCrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
