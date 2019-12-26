@@ -7,10 +7,10 @@ import at.stefangeyer.challonge.model.Tournament;
 import at.stefangeyer.challonge.model.query.MatchQuery;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.bxtr.pvp.bot.repository.TournamentParticipantRepository;
 import org.bxtr.pvp.bot.domain.FightResult;
 import org.bxtr.pvp.bot.domain.Player;
 import org.bxtr.pvp.bot.domain.TournamentParticipant;
+import org.bxtr.pvp.bot.repository.TournamentParticipantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 
 @Configuration
-class TelegramBotConfiguration {
+public class TelegramBotConfiguration {
 
     @Value("${pvp_bot.proxy.host:#{null}}")
     private String proxyHost;
@@ -26,7 +26,6 @@ class TelegramBotConfiguration {
 
     @Value("${pvp_bot.proxy.password:#{null}}")
     private String proxyPassword;
-
 
     @Bean
     public DefaultBotOptions getBotOptions() {

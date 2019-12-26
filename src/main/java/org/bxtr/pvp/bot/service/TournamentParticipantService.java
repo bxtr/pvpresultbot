@@ -1,8 +1,8 @@
 package org.bxtr.pvp.bot.service;
 
 import lombok.AllArgsConstructor;
-import org.bxtr.pvp.bot.repository.TournamentParticipantRepository;
 import org.bxtr.pvp.bot.domain.TournamentParticipant;
+import org.bxtr.pvp.bot.repository.TournamentParticipantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

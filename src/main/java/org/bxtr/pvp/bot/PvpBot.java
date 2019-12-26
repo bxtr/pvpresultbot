@@ -2,10 +2,11 @@ package org.bxtr.pvp.bot;
 
 import lombok.extern.log4j.Log4j2;
 import org.bxtr.pvp.bot.domain.Player;
+import org.bxtr.pvp.bot.domain.Team;
 import org.bxtr.pvp.bot.service.PlayerService;
 import org.bxtr.pvp.bot.service.TeamService;
 import org.bxtr.pvp.bot.service.TournamentService;
-import org.bxtr.pvp.bot.domain.Team;
+import org.bxtr.pvp.bot.utils.Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -23,6 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQuery
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -36,30 +38,21 @@ public class PvpBot extends TelegramLongPollingCommandBot {
     private final TeamService teamService;
     private final TournamentService tournamentService;
     private final List<BotCommand> botCommands;
-    @Value("${pvp-bot.telegram.token}")
+
+    @Value("${pvp_bot.telegram.token}")
     private String token;
 
+    @Value("${pvp_bot.telegram.username}")
+    private String username;
 
     public PvpBot(List<BotCommand> botCommands,
                   DefaultBotOptions options, TournamentService tournamentService, TeamService teamService, PlayerService playerService) {
-        super(options);
 
-        registerDefaultAction((absSender, message) -> {
-            SendMessage commandUnknownMessage = new SendMessage();
-            commandUnknownMessage.setChatId(message.getChatId());
-            commandUnknownMessage.setText("The command '" + message.getText() + "' is not known by this bot.");
-            Utils.send(absSender, commandUnknownMessage);
-        });
-
+        super(options, false);
         this.playerService = playerService;
         this.tournamentService = tournamentService;
         this.teamService = teamService;
         this.botCommands = botCommands;
-        botCommands.forEach(c -> {
-            log.info(String.format("/%s - %s", c.getCommandIdentifier(), c.getDescription()));
-            register(c);
-        });
-
     }
 
     private static AnswerInlineQuery converteResultsToResponse(InlineQuery inlineQuery, List<Player> results) {
@@ -91,6 +84,22 @@ public class PvpBot extends TelegramLongPollingCommandBot {
         return results;
     }
 
+    @PostConstruct
+    private void postConstruct() {
+        registerDefaultAction((absSender, message) -> {
+            SendMessage commandUnknownMessage = new SendMessage();
+            commandUnknownMessage.setChatId(message.getChatId());
+            commandUnknownMessage.setText("The command '" + message.getText() + "' is not known by this bot.");
+            Utils.send(absSender, commandUnknownMessage);
+        });
+
+        this.botCommands.forEach(c -> {
+            log.info(String.format("/%s - %s", c.getCommandIdentifier(), c.getDescription()));
+            register(c);
+        });
+
+    }
+
     @Override
     public String getBotToken() {
         return token;
@@ -98,7 +107,7 @@ public class PvpBot extends TelegramLongPollingCommandBot {
 
     @Override
     public String getBotUsername() {
-        return "PvpResultBotDev";
+        return username;
     }
 
     @Override

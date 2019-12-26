@@ -1,8 +1,8 @@
 package org.bxtr.pvp.bot.service;
 
 import lombok.AllArgsConstructor;
-import org.bxtr.pvp.bot.repository.TeamRepositoryJPA;
 import org.bxtr.pvp.bot.domain.Team;
+import org.bxtr.pvp.bot.repository.TeamRepositoryJPA;
 import org.springframework.stereotype.Service;
 
 @Service
